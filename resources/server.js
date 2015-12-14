@@ -13,13 +13,13 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var args = require("minimist")(process.argv);
-var project = require("./.scaffold");
 
 // For express
 var express = require("express"),
     bodyParser = require("body-parser"),
     methodOverride = require("method-override"),
     config = require("config"),
+    project = require("./project.json"),
     app = express();
 
 
@@ -33,7 +33,7 @@ app.use(methodOverride());
 // parse application/json
 app.use(bodyParser.json());
 
-app.use(project.path, express.static("./build"));
+app.use(project.context, express.static("./build"));
 
 app.get("/stormcloud-services/test", function(req, res){
     res.send("Hello, from " + project.displayName)

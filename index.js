@@ -2,14 +2,17 @@
  *
  */
 
-var process = require('process'),
-    exec = require('child_process').exec,
+var exec = require('child_process').exec,
     fs = require('fs'),
     path = require('path'),
     readline = require('readline'),
     ncp = require('ncp').ncp,
-    fileName = "/.scaffold",
-    project = {};
+    ProgressBar = require('progress'),
+    fileName = "/project.json",
+    scaffold = require("./package.json"),
+    project = {},
+    bar, timer;
+
 
 
 function wizard() {
@@ -51,14 +54,19 @@ function wizard() {
                     console.log("Could not copy resources to " + cwd, err);
                     this.close();
                 }
+                updatePackageJson(project, cwd);
                 fs.writeFile(cwd + "/" + fileName, JSON.stringify(project), function(err){
                     if (err) {
                         console.log("Could not write to .scaffold", err, project);
                         this.close();
                     }
-                    console.log("Installing NPM modules");
+                    bar = new ProgressBar('Installing NPM modules (:elapsed) [:bar', { total: 1000, incomplete: ' ' });
+                    timer = setInterval(function() {
+                        bar.tick();
+                    }, 100);
                     exec("npm install", function(err, stdout){
                         console.log(stdout);
+                        clearInterval(timer);
                         this.close();
                     }.bind(this));
                 }.bind(this))
@@ -95,7 +103,16 @@ function rmDir(dirPath) {
     if (dirPath != process.cwd()){
         fs.rmdirSync(dirPath);
     }
-};
+}
+
+
+function updatePackageJson(project, cwd){
+    var pkg = require(path.join(cwd, "package.json")),
+        output;
+    pkg.name = project.name;
+    output = JSON.stringify(pkg, null, 4).replace(scaffold.name, project.name);
+    fs.writeFileSync("./package.json", output);
+}
 
 
 

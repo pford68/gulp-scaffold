@@ -28,6 +28,6 @@ gulp.task("browserify", function(){
     return b.bundle()
         .pipe(source('./src/js/main.js'))
         .pipe(gulpif(config.debug === false, streamify(uglify())))
-        .pipe(rename(config.build.js.name))
+        .pipe(rename("main.js"))
         .pipe(gulp.dest('./build/js'));
 });
