@@ -1,6 +1,6 @@
 {
   "name": "gulp-scaffold",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Scaffolds Gulp projects the way I like them",
   "main": "index.js",
   "scripts": {
