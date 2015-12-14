@@ -3,11 +3,11 @@
  */
 
 var process = require('process'),
+    exec = require('child_process').exec,
     fs = require('fs'),
     path = require('path'),
     readline = require('readline'),
     ncp = require('ncp').ncp,
-    program = require('commander'),
     fileName = "/.scaffold",
     project = {};
 
@@ -56,8 +56,9 @@ function wizard() {
                         console.log("Could not write to .scaffold", err, project);
                         this.close();
                     }
-                    program.command('exec npm install').action(function(cmd){
-                        console.log("npm install:", cmd)
+                    console.log("Installing NPM modules");
+                    exec("npm install", function(err, stdout){
+                        console.log(stdout);
                         this.close();
                     }.bind(this));
                 }.bind(this))
@@ -96,13 +97,6 @@ function rmDir(dirPath) {
     }
 };
 
-
-
-
-program
-    .version('1.0.0')
-    .option('-p, --project', 'The project name')
-    .parse(process.argv);
 
 
 
