@@ -56,7 +56,8 @@ function wizard() {
                         console.log("Could not write to .scaffold", err, project);
                         this.close();
                     }
-                    program.command('npm install').action(function(cmd){
+                    program.command('exec npm install').action(function(cmd){
+                        console.log("npm install:", cmd)
                         this.close();
                     }.bind(this));
                 }.bind(this))
