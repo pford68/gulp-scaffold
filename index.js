@@ -61,6 +61,7 @@ function wizard() {
                         console.log("Could not write to " + outputPath, err, project);
                         this.close();
                     }
+                    process.stdout.write('Installing NPM modules...');
                     timer = setInterval(function() {
                         process.stdout.write('.');
                     }, 100);
