@@ -5,7 +5,6 @@ var exec = require('child_process').exec,
     path = require('path'),
     readline = require('readline'),
     ncp = require('ncp').ncp,
-    ProgressBar = require('progress'),
     outputFile = "/project.json",
     scaffold = require("./package.json"),
     project = {},
@@ -62,18 +61,13 @@ function wizard() {
                         console.log("Could not write to " + outputPath, err, project);
                         this.close();
                     }
-                    bar = new ProgressBar('Installing NPM modules [:bar] :percent :etas', {
-                        complete: '=',
-                        incomplete: ' ',
-                        width: 80,
-                        total: 100
-                    });
                     timer = setInterval(function() {
-                        bar.tick();
+                        process.stdout.write('.');
                     }, 100);
                     exec("npm install", function(err, stdout){
-                        console.log(stdout);
+                        console.log('\n' + stdout);
                         clearInterval(timer);
+                        process.stdout.write('\nFinished.\n');
                         this.close();
                     }.bind(this));
                 }.bind(this))
@@ -97,7 +91,6 @@ function wizard() {
 function rmDir(dirPath) {
     try { var files = fs.readdirSync(dirPath); }
     catch(e) { return; }
-    console.log(files);
     if (files.length > 0) {
         for (var i = 0; i < files.length; i++) {
             var filePath = path.join(dirPath, files[i]);
