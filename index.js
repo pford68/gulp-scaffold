@@ -6,7 +6,7 @@ var exec = require('child_process').exec,
     readline = require('readline'),
     ncp = require('ncp').ncp,
     ProgressBar = require('progress'),
-    fileName = "/project.json",
+    outputFile = "/project.json",
     scaffold = require("./package.json"),
     project = {},
     bar, timer;
@@ -19,13 +19,17 @@ function wizard() {
         output: process.stdout
     });
 
+
     var _this = {
         cursor: 0,
         items: [],
-        next: function () {
-            ++this.cursor;
+        prompt: function(){
             rl.setPrompt(this.items[this.cursor].msg);
             rl.prompt();
+        },
+        next: function () {
+            ++this.cursor;
+            this.prompt();
         },
         add: function (msg, item) {
             this.items.push({ msg: msg, action: item.bind(this) });
@@ -33,8 +37,7 @@ function wizard() {
         },
         start: function() {
             this.cursor = 0;
-            rl.setPrompt(this.items[this.cursor].msg);
-            rl.prompt();
+            this.prompt();
         },
         close: function(){
             rl.close();
@@ -48,17 +51,23 @@ function wizard() {
 
             // Copy contents of this module's resources directory to the CWD.
             ncp(path.join(__dirname, "resources"), cwd, function(err){
+                var outputPath = path.join(cwd, outputFile);
                 if (err){
                     console.log("Could not copy resources to " + cwd, err);
                     this.close();
                 }
                 updatePackageJson(project, cwd);
-                fs.writeFile(cwd + "/" + fileName, JSON.stringify(project), function(err){
+                fs.writeFile(outputPath, JSON.stringify(project), function(err){
                     if (err) {
-                        console.log("Could not write to .scaffold", err, project);
+                        console.log("Could not write to " + outputPath, err, project);
                         this.close();
                     }
-                    bar = new ProgressBar('Installing NPM modules (:elapsed) [:bar', { total: 1000, incomplete: ' ' });
+                    bar = new ProgressBar('Installing NPM modules [:bar] :percent :etas', {
+                        complete: '=',
+                        incomplete: ' ',
+                        width: 80,
+                        total: 100
+                    });
                     timer = setInterval(function() {
                         bar.tick();
                     }, 100);
