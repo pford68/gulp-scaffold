@@ -1,6 +1,6 @@
 {
   "name": "gulp-scaffold",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Scaffolds Gulp projects the way I like them",
   "bin": {
     "gulp-scaffold": "./index.js"
