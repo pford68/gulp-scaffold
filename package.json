@@ -2,7 +2,7 @@
   "name": "gulp-scaffold",
   "version": "1.0.1",
   "description": "Scaffolds Gulp projects the way I like them",
-  "main": "index.js",
+  "bin": {"gulp-scaffold": "./index.js"},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
