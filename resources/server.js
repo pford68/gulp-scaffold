@@ -35,8 +35,8 @@ app.use(bodyParser.json());
 
 app.use(project.context, express.static("./build"));
 
-app.get("/stormcloud-services/test", function(req, res){
-    res.send("Hello, from " + project.displayName)
+app.get(`/${project.name}-services/test`, function(req, res){
+    res.send(`Hello, from ${project.displayName}`)
 });
 
 
@@ -44,7 +44,7 @@ app.get("/stormcloud-services/test", function(req, res){
 //=========================================================== Public
 exports.start = function(port){
     app.listen(port, function(){
-        console.log("Starting " + project.displayName + " on port " + port + "....");
+        console.log(`Starting ${project.displayName} on port ${port}....`);
     });
 };
 
