@@ -12,10 +12,10 @@
  */
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-var args = require("minimist")(process.argv);
+let args = require("minimist")(process.argv);
 
 // For express
-var express = require("express"),
+let express = require("express"),
     bodyParser = require("body-parser"),
     methodOverride = require("method-override"),
     config = require("config"),
