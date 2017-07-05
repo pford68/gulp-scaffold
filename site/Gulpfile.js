@@ -8,7 +8,6 @@
  * To start the dev server:  gulp dev
  */
 var gulp = require('gulp'),
-    gutil = require('gulp-util'),               // For outputting gulp results to the console.
     del = require('del'),                       // For deleting files and directories
     merge = require("merge-stream"),            // Combines multiple streams into one.
     requireDir = require("require-dir"),        // Imports an entire directory
@@ -36,14 +35,9 @@ gulp.task('clean', function(done) {
 /*
  Builds the entire project.
  */
-gulp.task("build", ['fonts', 'images', 'lint', 'css-lint', 'browserify', 'views'], function(){
-    return gulp.src([
-            './src/*.html'
-        ], { base: './src' })
+gulp.task("build", ['images', 'lint', 'css-lint', 'browserify', 'views'], function(){
+    /* To out test data on lite-server, copy it to the build directory as shown below
+    gulp.src('./data.json')
         .pipe(gulp.dest(gDestDir));
+    */
 });
-
-
-
-
-

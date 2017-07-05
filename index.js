@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-var exec = require('child_process').exec,
+let exec = require('child_process').exec,
     fs = require('fs'),
     path = require('path'),
     readline = require('readline'),
@@ -11,15 +11,20 @@ var exec = require('child_process').exec,
     bar, timer;
 
 
+String.prototype.replaceAll = function(search, replacement) {
+    return this.replace(new RegExp(search, 'g'), replacement);
+};
+
+
 
 function wizard() {
-    var rl = readline.createInterface({
+    let rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
     });
 
 
-    var _this = {
+    let _this = {
         cursor: 0,
         items: [],
         prompt: function(){
@@ -42,17 +47,17 @@ function wizard() {
             rl.close();
         },
         save: function(){
-            var cwd = process.cwd();
+            let cwd = process.cwd();
             console.log(cwd, __dirname);
 
             // Delete current contents, if any.
             rmDir(cwd);
 
-            // Copy contents of this module's resources directory to the CWD.
-            ncp(path.join(__dirname, "resources"), cwd, function(err){
-                var outputPath = path.join(cwd, outputFile);
+            // Copy contents of this module's site directory to the CWD.
+            ncp(path.join(__dirname, "site"), cwd, function(err){
+                let outputPath = path.join(cwd, outputFile);
                 if (err){
-                    console.log("Could not copy resources to " + cwd, err);
+                    console.log("Could not copy site to " + cwd, err);
                     this.close();
                 }
                 updatePackageJson(project, cwd);
@@ -90,11 +95,12 @@ function wizard() {
 
 
 function rmDir(dirPath) {
-    try { var files = fs.readdirSync(dirPath); }
+    let files;
+    try { files = fs.readdirSync(dirPath); }
     catch(e) { return; }
     if (files.length > 0) {
-        for (var i = 0; i < files.length; i++) {
-            var filePath = path.join(dirPath, files[i]);
+        for (let i = 0; i < files.length; i++) {
+            let filePath = path.join(dirPath, files[i]);
             if (fs.statSync(filePath).isFile())
                 fs.unlinkSync(filePath);
             else
@@ -108,10 +114,10 @@ function rmDir(dirPath) {
 
 
 function updatePackageJson(project, cwd){
-    var pkg = require(path.join(cwd, "package.json")),
+    let pkg = require(path.join(cwd, "package.json")),
         output;
     pkg.name = project.name;
-    output = JSON.stringify(pkg, null, 4).replace(scaffold.name, project.name);
+    output = JSON.stringify(pkg, null, 4).replaceAll(scaffold.name, project.name);
     fs.writeFileSync("./package.json", output);
 }
 
